@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import TextField from '@mui/material/TextField';
 import fileService from '../services/fileService';
 
 function FileList() {
 
   const [files, setFiles] = useState([]);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -22,10 +24,22 @@ function FileList() {
     fetchFiles();
   }, []);
 
+  const filteredFiles = files.filter((file) =>
+    file.nombre.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: 500, width: '100%' }}>
+      <TextField
+        label="Buscar archivo"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        value={searchText}
+        onChange={(e) => setSearchText(e.target.value)} 
+      />
       <DataGrid
-        rows={files}
+        rows={filteredFiles}
         columns={[
           { field: 'id', headerName: 'Id', width: 150 },
           { field: 'nombre', headerName: 'Nombre', width: 250 },
